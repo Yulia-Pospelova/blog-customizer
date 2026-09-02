@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { ArrowButton } from 'src/ui/arrow-button';
@@ -19,7 +19,11 @@ import {
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
+type ArticleParamsFormProps = {
+	onApply: (articleState: ArticleStateType) => void;
+};
+
+export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [formState, setFormState] =
 		useState<ArticleStateType>(defaultArticleState);
@@ -44,6 +48,16 @@ export const ArticleParamsForm = () => {
 
 	const handleToggle = () => setIsOpen((prevIsOpen) => !prevIsOpen);
 
+	const handleSubmit = (event: FormEvent) => {
+		event.preventDefault();
+		onApply(formState);
+	};
+
+	const handleReset = () => {
+		setFormState(defaultArticleState);
+		onApply(defaultArticleState);
+	};
+
 	const handleChange =
 		<Key extends keyof ArticleStateType>(key: Key) =>
 		(value: ArticleStateType[Key]) => {
@@ -57,7 +71,10 @@ export const ArticleParamsForm = () => {
 				className={clsx(styles.container, {
 					[styles.container_open]: isOpen,
 				})}>
-				<form className={styles.form}>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					onReset={handleReset}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
