@@ -24,18 +24,18 @@ type ArticleParamsFormProps = {
 };
 
 export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [formState, setFormState] =
 		useState<ArticleStateType>(defaultArticleState);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (!isOpen) return;
+		if (!isSidebarOpen) return;
 
 		const handleMouseDown = (event: MouseEvent) => {
 			const { target } = event;
 			if (target instanceof Node && !rootRef.current?.contains(target)) {
-				setIsOpen(false);
+				setIsSidebarOpen(false);
 			}
 		};
 
@@ -44,9 +44,10 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 		return () => {
 			document.removeEventListener('mousedown', handleMouseDown);
 		};
-	}, [isOpen]);
+	}, [isSidebarOpen]);
 
-	const handleToggle = () => setIsOpen((prevIsOpen) => !prevIsOpen);
+	const handleToggle = () =>
+		setIsSidebarOpen((prevIsSidebarOpen) => !prevIsSidebarOpen);
 
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
@@ -66,10 +67,10 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 
 	return (
 		<div ref={rootRef}>
-			<ArrowButton isOpen={isOpen} onClick={handleToggle} />
+			<ArrowButton isOpen={isSidebarOpen} onClick={handleToggle} />
 			<aside
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isSidebarOpen,
 				})}>
 				<form
 					className={styles.form}
